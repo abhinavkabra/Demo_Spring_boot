@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    tools {
+        maven 'mvn-install'
+        jdk 'jdk'
+    }
     stages {
         stage('Checkout Code') {
         	steps {
@@ -8,7 +12,7 @@ pipeline {
         }
         stage('Build Code') {
         	steps {
-           		sh "mvn clean install"            
+           		bat "mvn clean install"            
         	}
         }
     }
