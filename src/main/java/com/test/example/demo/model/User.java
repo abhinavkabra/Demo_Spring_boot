@@ -1,4 +1,4 @@
-package com.test.example.jenkins.model;
+package com.test.example.demo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

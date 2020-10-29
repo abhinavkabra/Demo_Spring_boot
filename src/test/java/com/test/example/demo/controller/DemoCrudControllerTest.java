@@ -1,4 +1,4 @@
-package com.test.example.jenkins.controller;
+package com.test.example.demo.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -14,21 +14,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.test.example.jenkins.service.JenkinsService;
+import com.test.example.demo.service.DemoService;
 
 @AutoConfigureMockMvc
-@WebMvcTest(controllers = JenkinsCrudController.class)
-public class JenkinsCrudControllerTest {
+@WebMvcTest(controllers = DemoCrudController.class)
+public class DemoCrudControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
 	
 	@MockBean
-	JenkinsService jenkinsService;
+	DemoService demoService;
 	
 	@Test
 	public void testJenkinsMessage() throws Exception {
-		when(jenkinsService.getMessage()).thenReturn("Hello from Jenkins");
+		when(demoService.getMessage()).thenReturn("Hello from Jenkins");
 		MvcResult andReturn = mockMvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 		.andReturn();
 		assertThat(

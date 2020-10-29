@@ -1,10 +1,11 @@
-package com.test.example.jenkins;
+package com.test.example.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootTest
-class JenkinsExampleApplicationTests {
+class DemoExampleApplicationTests {
 
 	@Test
 	void contextLoads() {
