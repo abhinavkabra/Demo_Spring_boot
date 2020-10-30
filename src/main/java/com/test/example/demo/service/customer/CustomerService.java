@@ -28,4 +28,8 @@ public class CustomerService {
 				.orElse(Customer.builder().build());
 	}
 
+	public void deleteById(int id) {
+		customerRepositories.deleteById(id);
+	}
+
 }

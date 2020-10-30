@@ -2,6 +2,8 @@ package com.test.example.demo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.example.demo.entities.CustomerEntity;
 import com.test.example.demo.model.Customer;
 import com.test.example.demo.repositories.CustomerRepositories;
-import com.test.example.demo.service.customer.CustomerService;
 import com.test.example.demo.supplier.CustomerSuppliers;
 
 @SpringBootTest
@@ -33,7 +34,7 @@ public class CustomerControllerIntegrationTests {
 	private static Customer customer = CustomerSuppliers.customer.get();
 
 	private static Customer customerSaved = CustomerSuppliers.customerSaved.get();
-	
+
 	private static CustomerEntity customerEntity = CustomerSuppliers.customerEntity.get();
 
 	@Autowired
@@ -43,39 +44,45 @@ public class CustomerControllerIntegrationTests {
 	MockMvc mockMvc;
 
 	@Autowired
-	CustomerService customerService;
-
-	@Autowired
 	CustomerRepositories customerRepo;
 
 	@Test
-	public void addCustomer_200OK() throws JsonProcessingException, Exception {
+	public void addCustomer_201Created() throws JsonProcessingException, Exception {
 		MvcResult results = mockMvc
 				.perform(post("/v1/customer/").contentType(MediaType.APPLICATION_JSON_VALUE)
 						.accept(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(customer)))
 				.andExpect(status().isCreated()).andReturn();
 		Customer readValue = objectMapper.readValue(results.getResponse().getContentAsString(), Customer.class);
 		Assertions.assertAll(() -> {
-			assertNotNull(customerSaved.getCustId());
+			assertNotNull(readValue.getCustId());
 			assertEquals(customerSaved.getFirstName(), readValue.getFirstName());
 			assertEquals(customerSaved.getLastName(), readValue.getLastName());
 			assertEquals(customerSaved.getSin(), readValue.getSin());
 		});
 	}
-	
+
 	@Test
 	public void getCustomer_200OK() throws JsonProcessingException, Exception {
 		int custId = customerRepo.save(customerEntity).getCustId();
-		MvcResult results = mockMvc
-				.perform(get("/v1/customer/{id}",String.valueOf(custId)).contentType(MediaType.APPLICATION_JSON_VALUE)
-						.accept(MediaType.APPLICATION_JSON_VALUE))
+		MvcResult results = mockMvc.perform(get("/v1/customer/{id}", String.valueOf(custId))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk()).andReturn();
 		Customer readValue = objectMapper.readValue(results.getResponse().getContentAsString(), Customer.class);
 		Assertions.assertAll(() -> {
-			assertNotNull(customerSaved.getCustId());
+			assertEquals(custId, readValue.getCustId());
 			assertEquals(customerSaved.getFirstName(), readValue.getFirstName());
 			assertEquals(customerSaved.getLastName(), readValue.getLastName());
 			assertEquals(customerSaved.getSin(), readValue.getSin());
 		});
+	}
+
+	@Test
+	public void deleteCustomer_204NoContent() throws Exception {
+		int custId = customerRepo.save(customerEntity).getCustId();
+		mockMvc.perform(delete("/v1/customer/{id}", String.valueOf(custId))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isNoContent()).andReturn();
+		CustomerEntity entity = customerRepo.findById(custId).orElse(null);
+		assertNull(entity);
 	}
 }
