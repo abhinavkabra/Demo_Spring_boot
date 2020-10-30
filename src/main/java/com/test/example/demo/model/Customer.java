@@ -1,5 +1,8 @@
 package com.test.example.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +17,17 @@ public class Customer {
 	private String lastName;
 
 	private String sin;
+
+	private final List<Transaction> transactions = new ArrayList<>();
+
+	public void addComment(Transaction transaction) {
+		transactions.add(transaction);
+		// transaction.setCustomer(this);
+	}
+
+	public void removeComment(Transaction transaction) {
+		transactions.remove(transaction);
+		// transaction.setCustomer(null);
+	}
 
 }
