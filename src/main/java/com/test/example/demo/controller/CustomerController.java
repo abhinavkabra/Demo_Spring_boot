@@ -1,6 +1,8 @@
 package com.test.example.demo.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,17 @@ public class CustomerController {
 	public Customer addCustomer(@RequestBody Customer customer) {
 		try {
 			return customerService.addCustomer(customer);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+	}
+	
+	@GetMapping("/{id}")
+	@ApiOperation("Get Customer")
+	@ResponseStatus(code = HttpStatus.OK)
+	public Customer getCustomer(@PathVariable("id") String id) {
+		try {
+			return customerService.getCustomer(Integer.parseInt(id));
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}

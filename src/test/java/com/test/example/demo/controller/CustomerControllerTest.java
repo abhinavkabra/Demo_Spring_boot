@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.example.demo.model.Customer;
 import com.test.example.demo.service.customer.CustomerService;
+import com.test.example.demo.supplier.CustomerSuppliers;
 
 @AutoConfigureWebMvc
 @WebMvcTest(controllers = CustomerController.class)
@@ -43,15 +44,13 @@ public class CustomerControllerTest {
 	@MockBean
 	CustomerService customerService;
 
-	private static Customer customer;
+	private static Customer customer = CustomerSuppliers.customer.get();
 
-	private static Customer customerSaved;
+	private static Customer customerSaved = CustomerSuppliers.customerSaved.get();
 
 	@BeforeAll
 	public static void setUp() {
-		customer = Customer.builder().firstName("JOHN").lastName("MATHEW").sin("123jdfh38478").build();
-		customerSaved = Customer.builder().custId(12345).firstName("JOHN").lastName("MATHEW").sin("123jdfh38478")
-				.build();
+
 	}
 
 	@Nested
@@ -67,9 +66,8 @@ public class CustomerControllerTest {
 		@Test
 		public void testAddCustomer_201() throws JsonProcessingException, Exception {
 			when(customerService.addCustomer(customer)).thenReturn(customerSaved);
-			MvcResult results = mockMvc
-					.perform(post("/v1/customer/").contentType(MediaType.APPLICATION_JSON_VALUE)
-							.content(objectMapper.writeValueAsString(customer)))
+			MvcResult results = mockMvc.perform(post("/v1/customer/").contentType(MediaType.APPLICATION_JSON_VALUE)
+					.accept(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(customer)))
 					.andExpect(status().isCreated()).andReturn();
 			Customer readValue = objectMapper.readValue(results.getResponse().getContentAsString(), Customer.class);
 			verify(customerService).addCustomer(customer);
@@ -85,7 +83,8 @@ public class CustomerControllerTest {
 		public void testAddCustomer_500() throws JsonProcessingException, Exception {
 			doThrow(new NullPointerException()).when(customerService).addCustomer(customer);
 			mockMvc.perform(post("/v1/customer/").contentType(MediaType.APPLICATION_JSON_VALUE)
-					.content(objectMapper.writeValueAsString(customer))).andExpect(status().is5xxServerError());
+					.accept(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(customer)))
+					.andExpect(status().is5xxServerError());
 			verify(customerService).addCustomer(customer);
 		}
 	}

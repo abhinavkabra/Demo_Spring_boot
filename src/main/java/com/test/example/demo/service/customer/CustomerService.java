@@ -17,10 +17,15 @@ public class CustomerService {
 	private final ObjectMapper objectMapper;
 
 	public Customer addCustomer(Customer customer) {
-		com.test.example.demo.entities.Customer convertValue = objectMapper.convertValue(customer,
-				com.test.example.demo.entities.Customer.class);
-		com.test.example.demo.entities.Customer save = customerRepositories.save(convertValue);
+		com.test.example.demo.entities.CustomerEntity convertValue = objectMapper.convertValue(customer,
+				com.test.example.demo.entities.CustomerEntity.class);
+		com.test.example.demo.entities.CustomerEntity save = customerRepositories.save(convertValue);
 		return objectMapper.convertValue(save, Customer.class);
+	}
+
+	public Customer getCustomer(int id) {
+		return customerRepositories.findById(id).map(e -> objectMapper.convertValue(e, Customer.class))
+				.orElse(Customer.builder().build());
 	}
 
 }
