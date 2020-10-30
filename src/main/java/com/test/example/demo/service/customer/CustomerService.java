@@ -3,6 +3,7 @@ package com.test.example.demo.service.customer;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test.example.demo.entities.CustomerEntity;
 import com.test.example.demo.model.Customer;
 import com.test.example.demo.repositories.CustomerRepositories;
 
@@ -17,9 +18,9 @@ public class CustomerService {
 	private final ObjectMapper objectMapper;
 
 	public Customer addCustomer(Customer customer) {
-		com.test.example.demo.entities.CustomerEntity convertValue = objectMapper.convertValue(customer,
-				com.test.example.demo.entities.CustomerEntity.class);
-		com.test.example.demo.entities.CustomerEntity save = customerRepositories.save(convertValue);
+		CustomerEntity convertValue = objectMapper.convertValue(customer,
+				CustomerEntity.class);
+		CustomerEntity save = customerRepositories.save(convertValue);
 		return objectMapper.convertValue(save, Customer.class);
 	}
 
@@ -29,7 +30,7 @@ public class CustomerService {
 	}
 
 	public void deleteById(int id) {
-		customerRepositories.deleteById(id);
+		customerRepositories.findById(id).ifPresent(e -> customerRepositories.delete(e));
 	}
 
 }
