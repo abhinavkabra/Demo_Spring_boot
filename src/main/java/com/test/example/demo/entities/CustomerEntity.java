@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,14 +37,15 @@ public class CustomerEntity {
 	private String sin;
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private final List<TransactionEntity> transactionEntities = new ArrayList<>();
 
-	public void addComment(TransactionEntity transaction) {
+	public void addTransaction(TransactionEntity transaction) {
 		transactionEntities.add(transaction);
 		transaction.setCustomer(this);
 	}
 
-	public void removeComment(TransactionEntity transaction) {
+	public void removeTransaction(TransactionEntity transaction) {
 		transactionEntities.remove(transaction);
 		transaction.setCustomer(null);
 	}

@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +32,6 @@ public class TransactionEntity {
 	private double amount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	private CustomerEntity customer;
 }

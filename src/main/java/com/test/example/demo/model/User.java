@@ -1,20 +1,20 @@
 package com.test.example.demo.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
-	
+
 	private int uID;
-	
+
 	private String fName;
-	
+
 	private String lName;
 
 }

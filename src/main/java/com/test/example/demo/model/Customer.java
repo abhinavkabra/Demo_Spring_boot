@@ -20,14 +20,14 @@ public class Customer {
 
 	private final List<Transaction> transactions = new ArrayList<>();
 
-	public void addComment(Transaction transaction) {
+	public void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
-		// transaction.setCustomer(this);
+		transaction.setCustomer(this);
 	}
 
-	public void removeComment(Transaction transaction) {
+	public void removeTransaction(Transaction transaction) {
 		transactions.remove(transaction);
-		// transaction.setCustomer(null);
+		transaction.setCustomer(null);
 	}
 
 }
