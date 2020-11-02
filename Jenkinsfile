@@ -15,5 +15,8 @@ pipeline {
            		bat "mvn clean install"            
         	}
         }
+        stage('Push Code to artifact repo') {
+           
+        }
     }
 }
